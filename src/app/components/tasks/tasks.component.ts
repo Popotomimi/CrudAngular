@@ -33,7 +33,7 @@ export class TasksComponent implements OnInit {
   }
 
   deleteTask(tarefa: Tarefa) {
-    this.taskService.deleteTask(tarefa).subscribe(() => (this.tarefas = this.tarefas.filter((t) => t.id !== tarefa.id)))
+    this.taskService.deleteTask(tarefa).subscribe(() => (this.tarefas = this.tarefas.filter((t) => t._id !== tarefa._id)))
   }
 
   toggleConcluido(tarefa: Tarefa) {
