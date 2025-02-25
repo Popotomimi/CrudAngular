@@ -14,26 +14,24 @@ import { AddTaskComponent } from '../add-task/add-task.component';
     AddTaskComponent
   ],
   templateUrl: './tasks.component.html',
-  styleUrl: './tasks.component.css'
+  styleUrls: ['./tasks.component.css']
 })
 export class TasksComponent implements OnInit {
 
   tarefas: Tarefa[] = []
 
-  constructor(private taskService:TaskService) {
-
-  }
+  constructor(private taskService: TaskService) {}
 
   ngOnInit(): void {
-
-    this.taskService.getTasks().subscribe((data) => {
-      this.tarefas = data;
+    this.taskService.tasks$.subscribe(tasks => {
+      this.tarefas = tasks;
     });
 
+    this.taskService.getTasks().subscribe();
   }
 
   deleteTask(tarefa: Tarefa) {
-    this.taskService.deleteTask(tarefa).subscribe(() => (this.tarefas = this.tarefas.filter((t) => t._id !== tarefa._id)))
+    this.taskService.deleteTask(tarefa).subscribe();
   }
 
   toggleConcluido(tarefa: Tarefa) {
@@ -41,10 +39,8 @@ export class TasksComponent implements OnInit {
     this.taskService.updateTask(tarefa).subscribe();
   }
 
-  AddTask(tarefa: Tarefa) {
-    this.taskService.addTask(tarefa).subscribe((tarefa) => {
-      this.tarefas.push(tarefa);
-    })
+  addTask(tarefa: Tarefa) {
+    this.taskService.addTask(tarefa).subscribe();
   }
-
 }
+
