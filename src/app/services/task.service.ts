@@ -1,15 +1,15 @@
-// task.service.ts
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { Tarefa } from '../../Tarefa';
 import { tap } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TaskService {
-  private apiUrl = "https://backendangular-wbbi.onrender.com/notes";
+  private apiUrl = environment.apiUrl; // Usa a variável de ambiente
   private tasksSubject = new BehaviorSubject<Tarefa[]>([]);
   public tasks$ = this.tasksSubject.asObservable();
 
