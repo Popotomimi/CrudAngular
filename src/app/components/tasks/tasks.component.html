@@ -1,7 +1,16 @@
-<app-add-task (onAddTask)="addTask($event)"></app-add-task>
-<app-task-item
-  *ngFor="let tarefa of tarefas"
-  [tarefa]="tarefa"
-  (onDeleteTask)="deleteTask($event)"
-  (onToggleConcluido)="toggleConcluido($event)"
-></app-task-item>
+<div *ngIf="loading" class="loading-indicator">
+  Carregando tarefas...
+  <!-- Este é o indicador de carregamento -->
+</div>
+
+<div *ngIf="!loading">
+  <!-- Exibe as tarefas somente após o carregamento -->
+  <app-add-task (onAddTask)="addTask($event)"></app-add-task>
+  <app-task-item
+    *ngFor="let tarefa of tarefas"
+    [tarefa]="tarefa"
+    (onDeleteTask)="deleteTask($event)"
+    (onToggleConcluido)="toggleConcluido($event)"
+  >
+  </app-task-item>
+</div>

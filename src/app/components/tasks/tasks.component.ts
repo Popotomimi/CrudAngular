@@ -13,27 +13,46 @@ import { AddTaskComponent } from '../add-task/add-task.component';
   styleUrls: ['./tasks.component.css'],
 })
 export class TasksComponent implements OnInit {
-  tarefas: Tarefa[] = [];
+  tarefas: Tarefa[] = []; // Lista de tarefas
+  loading: boolean = true; // Indicador de carregamento
 
   constructor(private taskService: TaskService) {}
 
   ngOnInit(): void {
-    this.taskService.refreshTasks();
-    this.taskService.tasks$.subscribe((tasks) => {
-      this.tarefas = tasks;
+    this.loading = true; // Certifique-se de ativar o carregamento
+    this.fetchTasks(); // Busca as tarefas ao carregar o componente
+  }
+
+  fetchTasks(): void {
+    this.loading = true; // Ativa o estado de carregamento
+    this.taskService.getTasks().subscribe(
+      (tasks) => {
+        this.tarefas = tasks; // Atualiza as tarefas com os dados do servidor
+        this.loading = false; // Finaliza o carregamento
+      },
+      (error) => {
+        console.error('Erro ao buscar tarefas:', error);
+        this.loading = false; // Finaliza o carregamento em caso de erro
+      }
+    );
+  }
+
+  deleteTask(tarefa: Tarefa): void {
+    this.taskService.deleteTask(tarefa).subscribe(() => {
+      this.fetchTasks(); // Recarrega os dados após deletar
     });
   }
 
-  deleteTask(tarefa: Tarefa) {
-    this.taskService.deleteTask(tarefa).subscribe();
+  toggleConcluido(tarefa: Tarefa): void {
+    tarefa.concluido = !tarefa.concluido; // Alterna o status de concluído
+    this.taskService.updateTask(tarefa).subscribe(() => {
+      this.fetchTasks(); // Recarrega os dados após atualizar
+    });
   }
 
-  toggleConcluido(tarefa: Tarefa) {
-    tarefa.concluido = !tarefa.concluido;
-    this.taskService.updateTask(tarefa).subscribe();
-  }
-
-  addTask(tarefa: Tarefa) {
-    this.taskService.addTask(tarefa).subscribe();
+  addTask(tarefa: Tarefa): void {
+    this.taskService.addTask(tarefa).subscribe(() => {
+      this.fetchTasks(); // Recarrega os dados após adicionar
+    });
   }
 }
