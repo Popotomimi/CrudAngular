@@ -6,45 +6,47 @@ import { tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TaskService {
-  private apiUrl = environment.apiUrl; // Usa a variável de ambiente
+  private apiUrl = environment.apiUrl;
   private tasksSubject = new BehaviorSubject<Tarefa[]>([]);
   public tasks$ = this.tasksSubject.asObservable();
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getTasks(): Observable<Tarefa[]> {
     return this.http.get<Tarefa[]>(this.apiUrl).pipe(
-      tap(tasks => this.tasksSubject.next(tasks))
+      tap((tasks) => {
+        this.tasksSubject.next(tasks);
+      })
     );
   }
 
   deleteTask(tarefa: Tarefa): Observable<Tarefa> {
-    return this.http.delete<Tarefa>(`${this.apiUrl}/${tarefa._id}`).pipe(
-      tap(() => this.refreshTasks())
-    );
+    return this.http
+      .delete<Tarefa>(`${this.apiUrl}/${tarefa._id}`)
+      .pipe(tap(() => this.refreshTasks()));
   }
 
   updateTask(tarefa: Tarefa): Observable<Tarefa> {
-    return this.http.put<Tarefa>(`${this.apiUrl}/${tarefa._id}`, tarefa).pipe(
-      tap(() => this.refreshTasks())
-    );
+    return this.http
+      .put<Tarefa>(`${this.apiUrl}/${tarefa._id}`, tarefa)
+      .pipe(tap(() => this.refreshTasks()));
   }
 
   addTask(tarefa: Tarefa): Observable<Tarefa> {
     const newTarefa = {
       tarefa: tarefa.tarefa,
       categoria: tarefa.categoria,
-      concluido: "false"
+      concluido: 'false',
     };
-    return this.http.post<Tarefa>(`${this.apiUrl}`, newTarefa).pipe(
-      tap(() => this.refreshTasks())
-    );
+    return this.http
+      .post<Tarefa>(`${this.apiUrl}`, newTarefa)
+      .pipe(tap(() => this.refreshTasks()));
   }
 
-  private refreshTasks() {
+  refreshTasks() {
     this.getTasks().subscribe();
   }
 }
