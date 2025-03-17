@@ -19,7 +19,6 @@ export class TasksComponent implements OnInit {
   constructor(private taskService: TaskService) {}
 
   ngOnInit(): void {
-    this.loading = true; // Certifique-se de ativar o carregamento
     this.fetchTasks(); // Busca as tarefas ao carregar o componente
   }
 
@@ -31,7 +30,7 @@ export class TasksComponent implements OnInit {
         this.loading = false; // Finaliza o carregamento
       },
       (error) => {
-        console.error('Erro ao buscar tarefas:', error);
+        console.error('Erro ao carregar tarefas:', error);
         this.loading = false; // Finaliza o carregamento em caso de erro
       }
     );
